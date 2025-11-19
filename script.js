@@ -2,6 +2,15 @@
 // CONFIG
 // =============================
 
+import { DiscordSDK, Events } from "@discord/embedded-app-sdk";
+
+const discordSdk = new DiscordSDK(1440848661717192807);
+
+await discordSdk.ready();
+
+// بعدها تقدر ترسل وتستقبل أحداث من Discord
+
+
 // لاحقًا سنضع رابط السيرفر الذي تستضيفه على Render
 const SERVER_URL = "wss://barraalsalfaonline.onrender.com";
 
@@ -75,3 +84,4 @@ restartBtn.onclick = () => {
 
 // ابدأ الاتصال
 connectToServer();
+
