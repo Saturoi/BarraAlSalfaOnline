@@ -3,7 +3,7 @@
 // =============================
 
 import { DiscordSDK, Events } from "@discord/embedded-app-sdk";
-
+const discordSdk = new window.DiscordSDK(1440848661717192807);
 const discordSdk = new DiscordSDK(1440848661717192807);
 
 await discordSdk.ready();
@@ -84,4 +84,5 @@ restartBtn.onclick = () => {
 
 // ابدأ الاتصال
 connectToServer();
+
 
