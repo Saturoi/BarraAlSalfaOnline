@@ -3,15 +3,20 @@
 // =============================
 async function startApp() {
 
+    // =============================
     // Discord SDK
+    // =============================
     const discordSdk = new window.DiscordSDK(1440848661717192807);
     await discordSdk.ready();
 
-    // رابط السيرفر (Render)
-    const SERVER_URL = "https://barraalsalfaonline.onrender.com";
+    // =============================
+    // WebSocket Server
+    // =============================
+    const SERVER_URL = "wss://barraalsalfaonline.onrender.com";
 
     let socket;
     let playerId = null;
+    let playerName = null;
     let isHost = false;
 
     // عناصر الواجهة
@@ -20,20 +25,29 @@ async function startApp() {
     const restartBtn = document.getElementById("restart-btn");
 
     // =============================
-    // الاتصال بالسيرفر
+    // احصل على معلومات اللاعب
+    // =============================
+    const user = await discordSdk.commands.getCurrentUser();
+    playerId = user.id;
+    playerName = user.username;
+
+    console.log("Player connected:", playerId, playerName);
+
+    // =============================
+    // اتصال WebSocket
     // =============================
     function connectToServer() {
         socket = new WebSocket(SERVER_URL);
 
         socket.onopen = () => {
+            console.log("WebSocket connected!");
             wordBox.textContent = "تم الاتصال... ننتظر الدور!";
 
-            // Player ID بسيط (لاحقًا نستخدم Discord Identity)
-            playerId = Math.floor(Math.random() * 999999);
-
+            // إرسال بيانات اللاعب للسيرفر
             socket.send(JSON.stringify({
                 type: "join",
-                playerId: playerId
+                playerId: playerId,
+                playerName: playerName
             }));
         };
 
@@ -54,8 +68,14 @@ async function startApp() {
             }
         };
 
-        socket.onerror = () => {
-            wordBox.textContent = "❌ خطأ في الاتصال — تأكد أن السيرفر يعمل";
+        socket.onerror = (err) => {
+            console.error("WebSocket error:", err);
+            wordBox.textContent = "❌ خطأ في الاتصال بالسيرفر";
+        };
+
+        socket.onclose = (e) => {
+            console.warn("WebSocket closed:", e.code, e.reason);
+            wordBox.textContent = "⚠ تم قطع الاتصال بالسيرفر";
         };
     }
 
@@ -65,23 +85,23 @@ async function startApp() {
     function updatePlayerList(players) {
         playerListDiv.innerHTML =
             "اللاعبين المتصلين:<br>" +
-            players.map(p => `• لاعب ${p.id}`).join("<br>");
+            players.map(p => `• ${p.name} (${p.id})`).join("<br>");
     }
 
     // =============================
     // زر إعادة البدء
     // =============================
     restartBtn.onclick = () => {
+        if (!isHost) return;
+
         socket.send(JSON.stringify({
             type: "restart",
             playerId: playerId
         }));
     };
 
-    // ابدأ الاتصال
+    // بدء الاتصال
     connectToServer();
 }
 
-// شغل التطبيق
 startApp();
-
