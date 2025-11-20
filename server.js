@@ -8,16 +8,8 @@ const wss = new WebSocket.Server({ port: PORT });
 
 console.log(`WebSocket server running on port ${PORT}`);
 
-// قائمة الكلمات المبدئية (يمكن تطويرها لاحقًا)
-const wordsList = {
-    1: "عجلات شتوية",
-    2: "نملة طائرة",
-    3: "سيف خشبي",
-    4: "روبوت كسول",
-    5: "جرة مخلل",
-    6: "حذاء مقلوب"
-};
-
+const fs = require('fs');
+const wordsList = JSON.parse(fs.readFileSync('./words.json'));
 // =============================
 // حالة اللعبة
 // =============================
@@ -117,3 +109,4 @@ function startRound() {
         }
     });
 }
+
