@@ -1,77 +1,74 @@
-// =============================
-// CONFIG
-// =============================
+async function startApp() {
 
-// لاحقًا سنضع رابط السيرفر الذي تستضيفه على Render
-const SERVER_URL = "wss://barraalsalfaonline.onrender.com";
+    // Discord SDK
+    const discordSdk = new window.DiscordSDK(1440848661717192807);
+    await discordSdk.ready();
 
-let socket;
-let playerId = null;
-let isHost = false;  // اللاعب 1
+    const SERVER_URL = "wss://barraalsalfaonline.onrender.com"; // ضع رابط Render هنا
 
-// عناصر الواجهة
-const wordBox = document.getElementById("word-box");
-const playerListDiv = document.getElementById("player-list");
-const restartBtn = document.getElementById("restart-btn");
+    let socket;
+    let playerId = null;
+    let playerName = null;
+    let isHost = false;
 
-// =============================
-// الاتصال بالسيرفر
-// =============================
-function connectToServer() {
-    socket = new WebSocket(SERVER_URL);
+    const wordBox = document.getElementById("word-box");
+    const playerListDiv = document.getElementById("player-list");
+    const restartBtn = document.getElementById("restart-btn");
 
-    socket.onopen = () => {
-        wordBox.textContent = "تم الاتصال... ننتظر الدور!";
+    const user = await discordSdk.commands.getCurrentUser();
+    playerId = user.id;
+    playerName = user.username;
 
-        // Discord Activities API — استرجاع معلومات اللاعب
-        // في النسخة الأولى سنستخدم Player ID بسيط
-        playerId = Math.floor(Math.random() * 999999);
+    console.log("Player connected:", playerId, playerName);
 
-        socket.send(JSON.stringify({
-            type: "join",
-            playerId: playerId
-        }));
+    function connectToServer() {
+        socket = new WebSocket(SERVER_URL);
+
+        socket.onopen = () => {
+            console.log("WebSocket connected!");
+            wordBox.textContent = "تم الاتصال... ننتظر الدور!";
+
+            socket.send(JSON.stringify({
+                type: "join",
+                playerId: playerId,
+                playerName: playerName
+            }));
+        };
+
+        socket.onmessage = (msg) => {
+            const data = JSON.parse(msg.data);
+
+            if (data.type === "word") wordBox.textContent = data.word;
+            if (data.type === "players") updatePlayerList(data.players);
+            if (data.type === "host") {
+                isHost = true;
+                restartBtn.style.display = "inline-block";
+            }
+        };
+
+        socket.onerror = (err) => {
+            console.error("WebSocket error:", err);
+            wordBox.textContent = "❌ خطأ في الاتصال بالسيرفر";
+        };
+
+        socket.onclose = (e) => {
+            console.warn("WS closed:", e.code, e.reason);
+            wordBox.textContent = "⚠ تم قطع الاتصال بالسيرفر";
+        };
+    }
+
+    function updatePlayerList(players) {
+        playerListDiv.innerHTML =
+            "اللاعبين المتصلين:<br>" +
+            players.map(p => `• ${p.name} (${p.id})`).join("<br>");
+    }
+
+    restartBtn.onclick = () => {
+        if (!isHost) return;
+        socket.send(JSON.stringify({ type: "restart", playerId: playerId }));
     };
 
-    socket.onmessage = (msg) => {
-        const data = JSON.parse(msg.data);
-
-        if (data.type === "word") {
-            wordBox.textContent = data.word;
-        }
-
-        if (data.type === "players") {
-            updatePlayerList(data.players);
-        }
-
-        if (data.type === "host") {
-            isHost = true;
-            restartBtn.style.display = "inline-block";
-        }
-    };
-
-    socket.onerror = () => {
-        wordBox.textContent = "❌ خطأ في الاتصال — تأكد من أن السيرفر يعمل";
-    };
+    connectToServer();
 }
 
-// =============================
-// تحديث قائمة اللاعبين
-// =============================
-function updatePlayerList(players) {
-    playerListDiv.innerHTML = "اللاعبين المتصلين:<br>" +
-        players.map(p => "• لاعب " + p.id).join("<br>");
-}
-
-// =============================
-// زر إعادة البدء
-// =============================
-restartBtn.onclick = () => {
-    socket.send(JSON.stringify({
-        type: "restart",
-        playerId: playerId
-    }));
-};
-
-// ابدأ الاتصال
-connectToServer();
+startApp();
