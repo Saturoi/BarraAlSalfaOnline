@@ -8,7 +8,7 @@ async function startApp() {
     await discordSdk.ready();
 
     // رابط السيرفر (Render)
-    const SERVER_URL = "wss://barraalsalfaonline.onrender.com";
+    const SERVER_URL = "https://barraalsalfaonline.onrender.com";
 
     let socket;
     let playerId = null;
@@ -84,3 +84,4 @@ async function startApp() {
 
 // شغل التطبيق
 startApp();
+
