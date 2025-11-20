@@ -1,50 +1,53 @@
 const WebSocket = require('ws');
-
-// =============================
-// CONFIG
-// =============================
+const fs = require('fs');
 const PORT = process.env.PORT || 8080;
-const wss = new WebSocket.Server({ port: PORT });
 
+const wss = new WebSocket.Server({ port: PORT });
 console.log(`WebSocket server running on port ${PORT}`);
 
-const fs = require('fs');
-const wordsList = JSON.parse(fs.readFileSync('./words.json'));
-// =============================
+// قراءة الكلمات من ملف JSON
+let wordsList = {};
+try {
+    wordsList = JSON.parse(fs.readFileSync('./words.json'));
+} catch (err) {
+    console.error("Error loading words.json, using default words");
+    wordsList = {
+        587: "عجلات شتوية",
+        124: "نملة طائرة",
+        921: "سيف خشبي",
+        33: "روبوت كسول",
+        14: "جرة مخلل",
+        999: "حذاء مقلوب"
+    };
+}
+
 // حالة اللعبة
-// =============================
-let players = []; // كل لاعب: {id, name, ws}
-let currentWord = {}; // {normalWord, specialWord, specialPlayerId}
+let players = [];
+let currentWord = {};
 
 // =============================
-// توصيل اللاعبين
+// اتصالات اللاعبين
 // =============================
 wss.on('connection', (ws) => {
-
     ws.on('message', (msg) => {
         try {
             const data = JSON.parse(msg);
 
             if (data.type === 'join') {
-                // إضافة اللاعب للقائمة
-                const player = {
-                    id: data.playerId,
-                    name: data.playerName,
-                    ws: ws
-                };
+                const player = { id: data.playerId, name: data.playerName, ws };
                 players.push(player);
 
-                // تحديد المضيف (اللاعب الأول)
+                // تعيين المضيف
                 if (players.length === 1) {
                     ws.send(JSON.stringify({ type: 'host' }));
                 }
 
                 broadcastPlayers();
-                startRound(); // يبدأ الجولة إذا أردنا فور انضمام أول لاعب
+                startRound();
             }
 
             if (data.type === 'restart') {
-                // إعادة البدء: مسح حالة اللعبة وإعلام الجميع
+                console.log(`Restart requested by player ${data.playerId}`);
                 currentWord = {};
                 players.forEach(p => p.ws.send(JSON.stringify({ type: 'word', word: "جارِ الاتصال بالسيرفر..." })));
                 startRound();
@@ -56,10 +59,11 @@ wss.on('connection', (ws) => {
     });
 
     ws.on('close', () => {
-        // إزالة اللاعب عند الخروج
         players = players.filter(p => p.ws !== ws);
         broadcastPlayers();
     });
+
+    ws.on('error', (err) => console.error("WebSocket client error:", err));
 });
 
 // =============================
@@ -67,9 +71,7 @@ wss.on('connection', (ws) => {
 // =============================
 function broadcastPlayers() {
     const list = players.map(p => ({ id: p.id, name: p.name }));
-    players.forEach(p => {
-        p.ws.send(JSON.stringify({ type: 'players', players: list }));
-    });
+    players.forEach(p => p.ws.send(JSON.stringify({ type: 'players', players: list })));
 }
 
 // =============================
@@ -78,21 +80,18 @@ function broadcastPlayers() {
 function startRound() {
     if (players.length === 0) return;
 
-    // اختيار لاعب برا السالفة عشوائيًا
     const specialIndex = Math.floor(Math.random() * players.length);
     const specialPlayer = players[specialIndex];
 
-    // اختيار رقم عشوائي للكلمة العادية
-    const normalNumbers = Object.keys(wordsList).map(n => parseInt(n));
-    let normalIndex = Math.floor(Math.random() * normalNumbers.length);
-    let normalWord = wordsList[normalNumbers[normalIndex]];
+    const numbers = Object.keys(wordsList).map(n => parseInt(n));
+    let normalIndex = Math.floor(Math.random() * numbers.length);
+    let normalWord = wordsList[numbers[normalIndex]];
 
-    // اختيار كلمة خاصة للاعب المختار مختلفة عن الكلمة العادية
     let specialIndexNum;
     do {
-        specialIndexNum = Math.floor(Math.random() * normalNumbers.length);
-    } while (normalNumbers[specialIndexNum] === normalNumbers[normalIndex]);
-    let specialWord = wordsList[normalNumbers[specialIndexNum]];
+        specialIndexNum = Math.floor(Math.random() * numbers.length);
+    } while (numbers[specialIndexNum] === numbers[normalIndex]);
+    let specialWord = wordsList[numbers[specialIndexNum]];
 
     currentWord = {
         normalWord,
@@ -100,13 +99,10 @@ function startRound() {
         specialPlayerId: specialPlayer.id
     };
 
-    // إرسال الكلمات لكل لاعب
     players.forEach(p => {
-        if (p.id === specialPlayer.id) {
-            p.ws.send(JSON.stringify({ type: 'word', word: specialWord }));
-        } else {
-            p.ws.send(JSON.stringify({ type: 'word', word: normalWord }));
-        }
+        const wordToSend = (p.id === specialPlayer.id) ? specialWord : normalWord;
+        p.ws.send(JSON.stringify({ type: 'word', word: wordToSend }));
     });
-}
 
+    console.log("Round started:", currentWord);
+}
