@@ -6,7 +6,7 @@ async function startApp() {
     // =============================
     // Discord SDK
     // =============================
-    const discordSdk = new window.DiscordSDK(1440848661717192807);
+    const discordSdk = new window.DiscordSDK("1440848661717192807");
     await discordSdk.ready();
 
     // =============================
@@ -105,3 +105,4 @@ async function startApp() {
 }
 
 startApp();
+
