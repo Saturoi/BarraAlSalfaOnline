@@ -32,7 +32,7 @@ playerId = Math.floor(Math.random() * 999999);
 let discordClient;
 if (window.Discord && window.Discord.ActivitySDK) {
     discordClient = new window.Discord.ActivitySDK({
-        clientId: "PUT_YOUR_CLIENT_ID_HERE" // ضع Client ID الخاص بتطبيقك
+        clientId: "1440848661717192807" // ضع Client ID الخاص بتطبيقك
     });
 
     discordClient.on('connected', () => {
@@ -153,3 +153,4 @@ restartBtn.onclick = () => {
 // =============================
 // تشغيل الاتصال
 connectToServer();
+
