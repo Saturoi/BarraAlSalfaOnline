@@ -4,7 +4,7 @@ const fs = require('fs');
 // =============================
 // CONFIG
 // =============================
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000;
 const MIN_PLAYERS = 3;
 const MIN_NUMBER = 1;
 const MAX_NUMBER = 999;
@@ -169,4 +169,5 @@ setInterval(() => {
 }, 30000);
 
 log(`Game server running on port ${PORT}`);
+
 
