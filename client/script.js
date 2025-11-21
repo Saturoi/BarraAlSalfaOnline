@@ -1,7 +1,7 @@
 // =============================
 // CONFIG
 // =============================
-const SERVER_URL = "wss://barraalsalfaonline.onrender.com";  // أثناء التجربة المحلية
+const SERVER_URL = "https://barraalsalfaonline.onrender.com/";  // أثناء التجربة المحلية
 
 // =============================
 // المتغيرات العامة
@@ -123,5 +123,6 @@ restartBtn.onclick = () => {
 // =============================
 // تشغيل الاتصال
 connectToServer();
+
 
 
