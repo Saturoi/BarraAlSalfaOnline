@@ -1,7 +1,7 @@
 // =============================
 // CONFIG
 // =============================
-const SERVER_URL = "wss://barraalsalfaonline.onrender.com";  // أثناء التجربة المحلية
+const SERVER_URL = "wss://barraalsalfaonline.onrender.com";  // سيرفر اللعب
 
 // =============================
 // المتغيرات العامة
@@ -27,6 +27,37 @@ playerUsername = "لاعب_" + Math.floor(Math.random() * 1000);
 playerId = Math.floor(Math.random() * 999999);
 
 // =============================
+// Discord Embedded Activity
+// =============================
+let discordClient;
+if (window.Discord && window.Discord.ActivitySDK) {
+    discordClient = new window.Discord.ActivitySDK({
+        clientId: "PUT_YOUR_CLIENT_ID_HERE" // ضع Client ID الخاص بتطبيقك
+    });
+
+    discordClient.on('connected', () => {
+        console.log("✅ Discord Activity متصل!");
+    });
+
+    function updateDiscordActivity(playerNumber, playerStatus) {
+        if (!discordClient) return;
+        const statusText = (playerStatus === "special") ? "⭐ لاعب خاص" : "لاعب عادي";
+
+        discordClient.updateActivity({
+            state: statusText,
+            details: "برا السالفة Online",
+            assets: {
+                large_image: "game_logo", // ضع اسم الصورة في Discord Developer Portal
+                large_text: "برا السالفة Online"
+            },
+            buttons: [
+                { label: "Join Game", url: window.location.href }
+            ]
+        });
+    }
+}
+
+// =============================
 // الاتصال بالسيرفر
 function connectToServer() {
     socket = new WebSocket(SERVER_URL);
@@ -44,8 +75,6 @@ function connectToServer() {
 
     socket.onmessage = (event) => {
         const data = JSON.parse(event.data);
-
-        // DEBUG: اطبع البيانات القادمة للتأكد
         console.log("Received from server:", data);
 
         switch (data.type) {
@@ -56,10 +85,11 @@ function connectToServer() {
 
                 // تحديث الدور من status الذي يرسله السيرفر ("special" أو "normal")
                 currentRole = data.status;
-
                 playerStatusDiv.textContent =
                     (currentRole === "special") ? "⭐ لاعب خاص" : "لاعب عادي";
 
+                // تحديث Discord Activity
+                updateDiscordActivity(data.number, currentRole);
                 break;
 
             case "players":
@@ -123,7 +153,3 @@ restartBtn.onclick = () => {
 // =============================
 // تشغيل الاتصال
 connectToServer();
-
-
-
-
