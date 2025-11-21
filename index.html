@@ -75,8 +75,40 @@
     <!-- زر إعادة البدء يظهر فقط للمشرف -->
     <button id="restart-btn">إعادة البدء</button>
 
+    <!-- Discord Activity SDK -->
+    <script src="https://unpkg.com/@discordjs/activity-sdk"></script>
+
     <!-- ربط ملف JavaScript -->
     <script src="script.js"></script>
+
+    <script>
+        // ==========================
+        // Discord Embedded Activity
+        // ==========================
+        const client = new window.Discord.ActivitySDK({
+            clientId: "PUT_YOUR_CLIENT_ID_HERE" // ضع Client ID الخاص بتطبيقك
+        });
+
+        client.on('connected', () => {
+            console.log("Discord Activity متصل!");
+        });
+
+        // تحديث حالة اللاعب على Discord
+        function updateDiscordActivity(playerNumber, playerStatus) {
+            let statusText = (playerStatus === "خاص") ? "⭐ لاعب خاص" : "لاعب عادي";
+            client.updateActivity({
+                state: statusText,
+                details: "برا السالفة Online",
+                assets: {
+                    large_image: "game_logo",   // ضع اسم أيقونة اللعبة في Discord Developer Portal
+                    large_text: "برا السالفة Online"
+                },
+                buttons: [
+                    { label: "Join Game", url: window.location.href }
+                ]
+            });
+        }
+    </script>
 
 </body>
 </html>
