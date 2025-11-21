@@ -169,3 +169,4 @@ setInterval(() => {
 }, 30000);
 
 log(`Game server running on port ${PORT}`);
+
