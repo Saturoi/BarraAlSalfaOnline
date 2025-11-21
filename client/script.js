@@ -124,3 +124,4 @@ restartBtn.onclick = () => {
 // تشغيل الاتصال
 connectToServer();
 
+
