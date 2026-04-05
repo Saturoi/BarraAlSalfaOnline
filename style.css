@@ -1,8 +1,8 @@
 /* إعدادات عامة */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #1e1e2e;
-    color: #cdd6f4;
+    background-color: #c9c9cf;
+    color: #5D5D5D;
     margin: 0;
     padding: 20px;
     display: flex;
@@ -14,7 +14,7 @@ body {
 .container {
     width: 100%;
     max-width: 500px;
-    background-color: #313244;
+    background-color: #ababb0;
     padding: 25px;
     border-radius: 12px;
     box-shadow: 0 8px 16px rgba(0,0,0,0.4);
@@ -22,16 +22,16 @@ body {
 
 h2 {
     text-align: center;
-    color: #89b4fa;
-    border-bottom: 2px solid #45475a;
+    color: #ff0000;
+    border-bottom: 2px solid #5D5D5D;
     padding-bottom: 15px;
     margin-top: 0;
 }
 
 /* الصناديق */
 .box {
-    background-color: #181825;
-    border: 1px solid #45475a;
+    background-color: #c9c9cf;
+    border: 1px solid #5D5D5D;
     border-radius: 8px;
     padding: 15px;
     margin: 15px 0;
@@ -43,9 +43,9 @@ input[type="text"] {
     padding: 12px;
     margin-bottom: 15px;
     border-radius: 8px;
-    border: 2px solid #45475a;
-    background-color: #1e1e2e;
-    color: #cdd6f4;
+    border: 2px solid #5D5D5D;
+    background-color: #ababb0;
+    color: #000000;
     font-size: 1.1em;
     box-sizing: border-box;
     text-align: center;
@@ -54,14 +54,14 @@ input[type="text"] {
 
 input[type="text"]:focus {
     outline: none;
-    border-color: #89b4fa;
+    border-color: #ffc300;
 }
 
 /* الأزرار */
 button {
     width: 100%;
-    background-color: #89b4fa;
-    color: #11111b;
+    background-color: #ffc300;
+    color: #000000;
     border: none;
     padding: 15px;
     font-size: 1.2em;
@@ -70,24 +70,24 @@ button {
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
-
+#EF8600
 button:hover {
-    background-color: #74c7ec;
+    background-color: #ffa900;
 }
 
 #join-btn {
-    background-color: #a6e3a1; 
+    background-color: #ffc300; 
 }
 
 #join-btn:hover {
-    background-color: #94e2d5;
+    background-color: #FFA900;
 }
 
 /* النصوص المميزة */
 .highlight {
     font-size: 1.5em;
     font-weight: bold;
-    color: #f9e2af;
+    color: #000;
     margin-top: 10px;
     text-align: center;
 }
@@ -100,11 +100,11 @@ button:hover {
     text-align: center;
     padding: 10px;
     border-radius: 6px;
-    background-color: #1e1e2e;
+    background-color: #c9c9cf;
 }
 
-.status.in { color: #a6e3a1; border: 1px solid #a6e3a1; }
-.status.out { color: #f38ba8; border: 1px solid #f38ba8; }
+.status.in { color: #ffc300; border: 1px solid #ffc; }
+.status.out { color: #ff0000; border: 1px solid #f38ba8; }
 
 /* قائمة اللاعبين */
 .player-list {
@@ -116,7 +116,7 @@ button:hover {
 }
 
 .player-list li {
-    background: #45475a;
+    background: #ababb0;
     margin-bottom: 8px;
     padding: 10px;
     border-radius: 6px;
