@@ -1,8 +1,4 @@
-// هذا الكود يكتشف تلقائياً رابط السيرفر (سواء كنت تجرب على هاتفك أو رفعته على الإنترنت)
-const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-const SERVER_URL = "https://barraalsalfaonline.onrender.com"; 
-
-
+const SERVER_URL = "wss://barraalsalfaonline.onrender.com"; 
 
 let socket;
 let isHost = false;
@@ -18,14 +14,13 @@ const playerStatusDiv = document.getElementById("player-status");
 const playerListDiv = document.getElementById("player-list");
 const restartBtn = document.getElementById("restart-btn");
 
-// وظيفة الاتصال
 function connectToServer(chosenName) {
     socket = new WebSocket(SERVER_URL);
 
     socket.onopen = () => {
         // إخفاء شاشة الدخول وإظهار اللعبة
-        joinScreen.style.display = "none";
-        gameScreen.style.display = "block";
+        if (joinScreen) joinScreen.style.display = "none";
+        if (gameScreen) gameScreen.style.display = "block";
         
         // إرسال الاسم للسيرفر
         socket.send(JSON.stringify({ type: "join", username: chosenName }));
@@ -65,23 +60,27 @@ function connectToServer(chosenName) {
 
     socket.onclose = () => {
         alert("❌ انقطع الاتصال بالسيرفر");
-        location.reload(); // إعادة تحميل الصفحة للعودة لشاشة الدخول
+        location.reload();
     };
 }
 
 // عند الضغط على زر انضمام
-joinBtn.addEventListener("click", () => {
-    const name = usernameInput.value.trim();
-    if (name.length < 2) {
-        alert("يرجى إدخال اسم مكون من حرفين على الأقل");
-        return;
-    }
-    connectToServer(name);
-});
+if (joinBtn) {
+    joinBtn.addEventListener("click", () => {
+        const name = usernameInput.value.trim();
+        if (name.length < 2) {
+            alert("يرجى إدخال اسم مكون من حرفين على الأقل");
+            return;
+        }
+        connectToServer(name);
+    });
+}
 
-// زر إعادة البدء للمضيف
-restartBtn.addEventListener("click", () => {
-    if (isHost && socket.readyState === WebSocket.OPEN) {
-        socket.send(JSON.stringify({ type: "restart" }));
-    }
-});
+// زر إعادة البدء
+if (restartBtn) {
+    restartBtn.addEventListener("click", () => {
+        if (isHost && socket.readyState === WebSocket.OPEN) {
+            socket.send(JSON.stringify({ type: "restart" }));
+        }
+    });
+}
