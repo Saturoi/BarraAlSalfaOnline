@@ -32,7 +32,7 @@ function connectToServer(chosenName) {
         switch (data.type) {
             case "players":
                 playerListDiv.innerHTML = data.players.map(p => 
-                    `<li>${p.username} ${p.isHost ? '👑' : ''}</li>`
+                    `<li>${p.username} ${p.isHost ? '✪' : ''}</li>`
                 ).join("");
                 break;
 
@@ -43,10 +43,10 @@ function connectToServer(chosenName) {
 
             case "role":
                 if (data.status === "out") {
-                    playerStatusDiv.textContent = "🕵️ أنت برا السالفة!";
+                    playerStatusDiv.textContent = "× أنت برا السالفة!";
                     playerStatusDiv.className = "status out";
                 } else {
-                    playerStatusDiv.textContent = "👥 أنت في السالفة";
+                    playerStatusDiv.textContent = "✓ أنت في السالفة";
                     playerStatusDiv.className = "status in";
                 }
                 wordBox.textContent = data.word;
@@ -59,7 +59,7 @@ function connectToServer(chosenName) {
     };
 
     socket.onclose = () => {
-        alert("❌ انقطع الاتصال بالسيرفر");
+        alert("X انقطع الاتصال بالسيرفر");
         location.reload();
     };
 }
