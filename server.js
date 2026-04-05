@@ -63,13 +63,15 @@ function startRound() {
     const selectedWord = words[randomKey]; 
     const displayNumber = randomKey.padStart(3, '0');
 
-    players.forEach((p, index) => {
+     players.forEach((p, index) => {
         if (index === specialIndex) {
             p.ws.send(JSON.stringify({ type: 'role', status: 'out', word: '❓ لا يوجد (أنت برا السالفة!)' }));
         } else {
-            p.ws.send(JSON.stringify({ type: 'role', status: 'in', word: `${selectedWord} (رقم ${displayNumber})` }));
+            // تم إزالة الرقم، وستظهر الكلمة فقط
+            p.ws.send(JSON.stringify({ type: 'role', status: 'in', word: selectedWord }));
         }
     });
+
 }
 
 // استقبال الاتصالات
