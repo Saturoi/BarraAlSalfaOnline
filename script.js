@@ -1,157 +1,86 @@
-// =============================
-// CONFIG
-// =============================
-const SERVER_URL = "wss://barraalsalfaonline.onrender.com";  // سيرفر اللعب
+// هذا الكود يكتشف تلقائياً رابط السيرفر (سواء كنت تجرب على هاتفك أو رفعته على الإنترنت)
+const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+const SERVER_URL = `${protocol}//${window.location.host}`;
 
-// =============================
-// المتغيرات العامة
-// =============================
+
 let socket;
-let playerUsername;
 let isHost = false;
-let playerId;
-let currentRole = "";
 
-// =============================
 // عناصر الواجهة
-// =============================
+const joinScreen = document.getElementById("join-screen");
+const gameScreen = document.getElementById("game-screen");
+const usernameInput = document.getElementById("username-input");
+const joinBtn = document.getElementById("join-btn");
+
 const wordBox = document.getElementById("word-box");
+const playerStatusDiv = document.getElementById("player-status");
 const playerListDiv = document.getElementById("player-list");
 const restartBtn = document.getElementById("restart-btn");
-const playerStatusDiv = document.getElementById("player-status");
-const previousSpecialDiv = document.getElementById("previous-special");
 
-// =============================
-// بيانات اللاعب (مؤقت)
-playerUsername = "لاعب_" + Math.floor(Math.random() * 1000);
-playerId = Math.floor(Math.random() * 999999);
-
-// =============================
-// Discord Embedded Activity
-// =============================
-let discordClient;
-if (window.Discord && window.Discord.ActivitySDK) {
-    discordClient = new window.Discord.ActivitySDK({
-        clientId: "1441271340685459628" // ضع Client ID الخاص بتطبيقك
-    });
-
-    discordClient.on('connected', () => {
-        console.log("✅ Discord Activity متصل!");
-    });
-
-    function updateDiscordActivity(playerNumber, playerStatus) {
-        if (!discordClient) return;
-        const statusText = (playerStatus === "special") ? "⭐ لاعب خاص" : "لاعب عادي";
-
-        discordClient.updateActivity({
-            state: statusText,
-            details: "برا السالفة Online",
-            assets: {
-                large_image: "game_logo", // ضع اسم الصورة في Discord Developer Portal
-                large_text: "برا السالفة Online"
-            },
-            buttons: [
-                { label: "Join Game", url: window.location.href }
-            ]
-        });
-    }
-}
-
-// =============================
-// الاتصال بالسيرفر
-function connectToServer() {
+// وظيفة الاتصال
+function connectToServer(chosenName) {
     socket = new WebSocket(SERVER_URL);
 
     socket.onopen = () => {
-        console.log("تم الاتصال بالسيرفر!");
-        wordBox.textContent = "تم الاتصال... ننتظر الجولة!";
-
-        socket.send(JSON.stringify({
-            type: "join",
-            playerId,
-            username: playerUsername
-        }));
+        // إخفاء شاشة الدخول وإظهار اللعبة
+        joinScreen.style.display = "none";
+        gameScreen.style.display = "block";
+        
+        // إرسال الاسم للسيرفر
+        socket.send(JSON.stringify({ type: "join", username: chosenName }));
     };
 
     socket.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        console.log("Received from server:", data);
 
         switch (data.type) {
-
-            case "word":
-                // عرض الرقم + تحديث الحالة
-                wordBox.textContent = data.number;
-
-                // تحديث الدور من status الذي يرسله السيرفر ("special" أو "normal")
-                currentRole = data.status;
-                playerStatusDiv.textContent =
-                    (currentRole === "special") ? "⭐ لاعب خاص" : "لاعب عادي";
-
-                // تحديث Discord Activity
-                updateDiscordActivity(data.number, currentRole);
-                break;
-
             case "players":
-                updatePlayerList(data.players);
+                playerListDiv.innerHTML = data.players.map(p => 
+                    `<li>${p.username} ${p.isHost ? '👑' : ''}</li>`
+                ).join("");
                 break;
 
             case "host":
                 isHost = true;
-                restartBtn.style.display = "inline-block";
+                restartBtn.style.display = "block";
                 break;
 
-            case "previousSpecial":
-                previousSpecialDiv.textContent =
-                    "اللاعب الخاص السابق: " + data.username;
+            case "role":
+                if (data.status === "out") {
+                    playerStatusDiv.textContent = "🕵️ أنت برا السالفة!";
+                    playerStatusDiv.className = "status out";
+                } else {
+                    playerStatusDiv.textContent = "👥 أنت في السالفة";
+                    playerStatusDiv.className = "status in";
+                }
+                wordBox.textContent = data.word;
                 break;
 
-            case "cannotStart":
-                wordBox.textContent = "❌ لا يمكن بدء الجولة: " + data.reason;
+            case "error":
+                alert(data.message);
                 break;
-
-            default:
-                console.warn("نوع رسالة غير معروف:", data);
         }
     };
 
-    socket.onerror = (err) => {
-        console.error("خطأ:", err);
-        wordBox.textContent = "❌ خطأ في الاتصال بالسيرفر";
-    };
-
     socket.onclose = () => {
-        wordBox.textContent = "❗ تم قطع الاتصال — أعد تحميل الصفحة";
-        restartBtn.style.display = "none";
+        alert("❌ انقطع الاتصال بالسيرفر");
+        location.reload(); // إعادة تحميل الصفحة للعودة لشاشة الدخول
     };
 }
 
-// =============================
-// تحديث قائمة اللاعبين
-function updatePlayerList(players) {
-    if (!players || players.length === 0) {
-        playerListDiv.textContent = "لا يوجد لاعبون بعد";
+// عند الضغط على زر انضمام
+joinBtn.addEventListener("click", () => {
+    const name = usernameInput.value.trim();
+    if (name.length < 2) {
+        alert("يرجى إدخال اسم مكون من حرفين على الأقل");
         return;
     }
+    connectToServer(name);
+});
 
-    playerListDiv.innerHTML = players
-        .map(p => "• " + p.username)
-        .join("<br>");
-}
-
-// =============================
-// زر إعادة البدء
-restartBtn.onclick = () => {
-    if (!isHost) return;
-
-    socket.send(JSON.stringify({
-        type: "restart",
-        playerId
-    }));
-};
-
-// =============================
-// تشغيل الاتصال
-connectToServer();
-
-
+// زر إعادة البدء للمضيف
+restartBtn.addEventListener("click", () => {
+    if (isHost && socket.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify({ type: "restart" }));
+    }
+});
