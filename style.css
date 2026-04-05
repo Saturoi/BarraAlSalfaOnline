@@ -1,17 +1,126 @@
+/* إعدادات عامة */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #1e1e2e;
+    color: #cdd6f4;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    direction: rtl;
+}
+
+/* الحاوية الأساسية */
+.container {
+    width: 100%;
+    max-width: 500px;
+    background-color: #313244;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+}
+
+h2 {
     text-align: center;
-    background-color: #222;
-    color: #fff;
+    color: #89b4fa;
+    border-bottom: 2px solid #45475a;
+    padding-bottom: 15px;
+    margin-top: 0;
 }
 
-.word {
-    font-size: 2em;
-    margin: 20px 0;
+/* الصناديق */
+.box {
+    background-color: #181825;
+    border: 1px solid #45475a;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 15px 0;
 }
 
+/* حقل إدخال الاسم */
+input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: 2px solid #45475a;
+    background-color: #1e1e2e;
+    color: #cdd6f4;
+    font-size: 1.1em;
+    box-sizing: border-box;
+    text-align: center;
+    transition: border-color 0.3s;
+}
+
+input[type="text"]:focus {
+    outline: none;
+    border-color: #89b4fa;
+}
+
+/* الأزرار */
 button {
-    font-size: 1em;
-    padding: 10px 20px;
+    width: 100%;
+    background-color: #89b4fa;
+    color: #11111b;
+    border: none;
+    padding: 15px;
+    font-size: 1.2em;
+    font-weight: bold;
+    border-radius: 8px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #74c7ec;
+}
+
+#join-btn {
+    background-color: #a6e3a1; 
+}
+
+#join-btn:hover {
+    background-color: #94e2d5;
+}
+
+/* النصوص المميزة */
+.highlight {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #f9e2af;
+    margin-top: 10px;
+    text-align: center;
+}
+
+/* حالة اللاعب */
+.status {
+    font-weight: bold;
+    font-size: 1.3em;
+    margin-top: 10px;
+    text-align: center;
+    padding: 10px;
+    border-radius: 6px;
+    background-color: #1e1e2e;
+}
+
+.status.in { color: #a6e3a1; border: 1px solid #a6e3a1; }
+.status.out { color: #f38ba8; border: 1px solid #f38ba8; }
+
+/* قائمة اللاعبين */
+.player-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 10px 0 0 0;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.player-list li {
+    background: #45475a;
+    margin-bottom: 8px;
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 1.1em;
+    display: flex;
+    justify-content: space-between;
 }
