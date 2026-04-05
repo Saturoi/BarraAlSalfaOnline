@@ -25,7 +25,7 @@ const words = {
     "008": "باب الحارة",
     "009": "قير عادي",
     "010": "المبرمج Saturoi"
-    "011": "احمد شو تهكر"
+    "011": "أحمد شو تهكر"
     "012": "صالح | oPiiLz"
 };
 
@@ -53,7 +53,7 @@ function assignHost() {
 function startRound() {
     if (players.length < MIN_PLAYERS) {
         const host = players.find(p => p.isHost);
-        if (host) host.ws.send(JSON.stringify({ type: 'error', message: 'نحتاج 3 لاعبين على الأقل لبدء اللعبة.' }));
+        if (host) host.ws.send(JSON.stringify({ type: 'error', message: 'أقل شي 3 نفر سديك' }));
         return;
     }
 
