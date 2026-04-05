@@ -1,6 +1,7 @@
 // هذا الكود يكتشف تلقائياً رابط السيرفر (سواء كنت تجرب على هاتفك أو رفعته على الإنترنت)
 const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-const SERVER_URL = `${protocol}//${window.location.host}`;
+const SERVER_URL = "https://barraalsalfaonline.onrender.com"; 
+
 
 
 let socket;
