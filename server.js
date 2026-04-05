@@ -67,7 +67,7 @@ function startRound() {
 
      players.forEach((p, index) => {
         if (index === specialIndex) {
-            p.ws.send(JSON.stringify({ type: 'role', status: 'out', word: '❓ لا يوجد '}));
+            p.ws.send(JSON.stringify({ type: 'role', status: 'out', word: 'حاول تعرف السالفة!'}));
         } else {
             // تم إزالة الرقم، وستظهر الكلمة فقط
             p.ws.send(JSON.stringify({ type: 'role', status: 'in', word: selectedWord }));
