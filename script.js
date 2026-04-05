@@ -32,7 +32,7 @@ function connectToServer(chosenName) {
         switch (data.type) {
             case "players":
                 playerListDiv.innerHTML = data.players.map(p => 
-                    `<li>${p.username} ${p.isHost ? '(مدير القروب)' : ''}</li>`
+                    `<li>${p.username} ${p.isHost ? ' (مدير القروب) ' : ''}</li>`
                 ).join("");
                 break;
 
@@ -59,7 +59,7 @@ function connectToServer(chosenName) {
     };
 
     socket.onclose = () => {
-        alert("X انقطع الاتصال بالسيرفر");
+        alert("X السيرفر طافي X");
         location.reload();
     };
 }
@@ -69,7 +69,7 @@ if (joinBtn) {
     joinBtn.addEventListener("click", () => {
         const name = usernameInput.value.trim();
         if (name.length < 2) {
-            alert("حط اسم انسان ( فوق حرفين )");
+            alert("حط اسم يا انسان ( فوق حرفين )");
             return;
         }
         connectToServer(name);
