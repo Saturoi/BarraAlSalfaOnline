@@ -1,7 +1,5 @@
 const http = require('http');
 const WebSocket = require('ws');
-const fs = require('fs');
-const path = require('path'); // 👈 أضفنا هذه المكتبة لضمان مسار الملف
 
 const PORT = process.env.PORT || 10000;
 const MIN_PLAYERS = 3;
@@ -15,15 +13,19 @@ const server = http.createServer((req, res) => {
 // خادم اللعبة WebSocket
 const wss = new WebSocket.Server({ server });
 
-// قراءة الكلمات من الملف بشكل آمن ومضمون
-let words = {};
-try {
-    const filePath = path.join(__dirname, 'words.json'); // 👈 تحديد المسار بدقة
-    words = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-    console.log("✅ تم قراءة ملف الكلمات بنجاح، عدد الكلمات:", Object.keys(words).length);
-} catch (e) {
-    console.error("❌ خطأ في قراءة ملف words.json:", e.message);
-}
+// 👈 وضعنا الكلمات مباشرة هنا! وداعاً لمشاكل قراءة الملفات
+const words = {
+    "001": "قلم",
+    "002": "كتاب",
+    "003": "سيارة",
+    "004": "بحر",
+    "005": "زلاجة",
+    "006": "عجلات شتوية",
+    "007": "عجلات",
+    "008": "مطرقة",
+    "009": "طائرة",
+    "010": "حاسوب"
+};
 
 let players = [];
 
@@ -56,16 +58,10 @@ function startRound() {
     const specialIndex = Math.floor(Math.random() * players.length);
     const wordKeys = Object.keys(words);
     
-    let selectedWord = "كلمة افتراضية";
-    let displayNumber = "000";
-
-    if (wordKeys.length > 0) {
-        const randomKey = wordKeys[Math.floor(Math.random() * wordKeys.length)];
-        selectedWord = words[randomKey]; 
-        displayNumber = randomKey.padStart(3, '0');
-    } else {
-        console.warn("⚠️ تحذير: قائمة الكلمات فارغة أو لم يتم قراءتها!");
-    }
+    // سحب كلمة عشوائية من القائمة المدمجة
+    const randomKey = wordKeys[Math.floor(Math.random() * wordKeys.length)];
+    const selectedWord = words[randomKey]; 
+    const displayNumber = randomKey.padStart(3, '0');
 
     players.forEach((p, index) => {
         if (index === specialIndex) {
