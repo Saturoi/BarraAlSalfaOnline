@@ -32,7 +32,7 @@ function connectToServer(chosenName) {
         switch (data.type) {
             case "players":
                 playerListDiv.innerHTML = data.players.map(p => 
-                    `<li>${p.username} ${p.isHost ? '✪' : ''}</li>`
+                    `<li>${p.username} ${p.isHost ? '(مدير القروب)' : ''}</li>`
                 ).join("");
                 break;
 
@@ -69,7 +69,7 @@ if (joinBtn) {
     joinBtn.addEventListener("click", () => {
         const name = usernameInput.value.trim();
         if (name.length < 2) {
-            alert("يرجى إدخال اسم مكون من حرفين على الأقل");
+            alert("حط اسم انسان ( فوق حرفين )");
             return;
         }
         connectToServer(name);
