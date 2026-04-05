@@ -15,16 +15,18 @@ const wss = new WebSocket.Server({ server });
 
 // 👈 وضعنا الكلمات مباشرة هنا! وداعاً لمشاكل قراءة الملفات
 const words = {
-    "001": "قلم",
-    "002": "كتاب",
-    "003": "سيارة",
-    "004": "بحر",
-    "005": "زلاجة",
-    "006": "عجلات شتوية",
-    "007": "عجلات",
-    "008": "مطرقة",
-    "009": "طائرة",
-    "010": "حاسوب"
+    "001": "شركة آبل",
+    "002": "تحريف الإنجيل",
+    "003": "يوسف-70",
+    "004": "لابتوب",
+    "005": "السيسي",
+    "006": "شبح موديل 90",
+    "007": "إلنترا",
+    "008": "باب الحارة",
+    "009": "قير عادي",
+    "010": "المبرمج Saturoi"
+    "011": "احمد شو تهكر"
+    "012": "صالح | oPiiLz"
 };
 
 let players = [];
@@ -65,7 +67,7 @@ function startRound() {
 
      players.forEach((p, index) => {
         if (index === specialIndex) {
-            p.ws.send(JSON.stringify({ type: 'role', status: 'out', word: '❓ لا يوجد (أنت برا السالفة!)' }));
+            p.ws.send(JSON.stringify({ type: 'role', status: 'out', word: '❓ لا يوجد '}));
         } else {
             // تم إزالة الرقم، وستظهر الكلمة فقط
             p.ws.send(JSON.stringify({ type: 'role', status: 'in', word: selectedWord }));
