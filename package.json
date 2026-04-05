@@ -1,11 +1,14 @@
 {
-  "name": "barra-online-server",
+  "name": "barra-alsalfa-online",
   "version": "1.0.0",
+  "description": "لعبة برا السالفة أونلاين",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
-    "ws": "^8.13.0"
-  }
+    "ws": "^8.18.3"
+  },
+  "author": "",
+  "license": "ISC"
 }
