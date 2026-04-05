@@ -43,10 +43,10 @@ function connectToServer(chosenName) {
 
             case "role":
                 if (data.status === "out") {
-                    playerStatusDiv.textContent = "× أنت برا السالفة!";
+                    playerStatusDiv.textContent = "!! أنت برا السالفة !!";
                     playerStatusDiv.className = "status out";
                 } else {
-                    playerStatusDiv.textContent = "✓ أنت في السالفة";
+                    playerStatusDiv.textContent = "أنت في السالفة";
                     playerStatusDiv.className = "status in";
                 }
                 wordBox.textContent = data.word;
