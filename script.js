@@ -59,7 +59,7 @@ function connectToServer(chosenName) {
     };
 
     socket.onclose = () => {
-        alert("X السيرفر طافي X");
+        alert("X إنقطع الإتصال ( جيب له لصق ) X");
         location.reload();
     };
 }
