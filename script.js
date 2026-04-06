@@ -32,7 +32,7 @@ function connectToServer(chosenName) {
         switch (data.type) {
             case "players":
                 playerListDiv.innerHTML = data.players.map(p => 
-                    `<li>${p.username} ${p.isHost ? ' (مدير القروب) ' : ''}</li>`
+                    `<li>${p.username} ${p.isHost ? '  (مدير القروب)  ' : ''}</li>`
                 ).join("");
                 break;
 
@@ -43,7 +43,7 @@ function connectToServer(chosenName) {
 
             case "role":
                 if (data.status === "out") {
-                    playerStatusDiv.textContent = "!! أنت برا السالفة !!";
+                    playerStatusDiv.textContent = "! أنت برا السالفة !";
                     playerStatusDiv.className = "status out";
                 } else {
                     playerStatusDiv.textContent = "أنت في السالفة";
@@ -69,7 +69,7 @@ if (joinBtn) {
     joinBtn.addEventListener("click", () => {
         const name = usernameInput.value.trim();
         if (name.length < 2) {
-            alert("حط اسم يا انسان ( فوق حرفين )");
+            alert("حط اسم يا انسان ( حرفين أو أكثر )");
             return;
         }
         connectToServer(name);
