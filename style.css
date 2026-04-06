@@ -66,7 +66,7 @@ button {
     color: #353535;
     border: none;
     padding: 5px;
-    font-size: 2em;
+    font-size: 1.5em;
     font-weight: bold;
     border-radius: 8px;
     cursor: pointer;
@@ -97,15 +97,15 @@ button:hover {
 /* حالة اللاعب */
 .status {
     font-weight: bold;
-    font-size: 1.8em;
+    font-size: 2em;
     margin-top: 5px;
     text-align: center;
-    padding: 10px;
+    padding: 5px;
     border-radius: 6px;
     background-color: #c9c9cf;
 }
 
-.status.in { color: #51B56C;}
+.status.in { color: #3F7F4F;}
 .status.out { color: #ff0000; }
 
 /* قائمة اللاعبين */
