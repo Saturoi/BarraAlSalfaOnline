@@ -6,27 +6,29 @@ body {
     margin: 0;
     padding: 20px;
     display: flex;
-    justify-content: center;
+    flex-direction: column; /* ⬅️ هذا السطر هو اللي يخلي العناصر فوق بعض */
+    align-items: center;    /* ⬅️ لتوسيط العناصر أفقياً */
+    justify-content: center; 
+    min-height: 100vh;      /* ⬅️ عشان يخلي الشاشة كاملة ويتوسط المحتوى صح */
     direction: rtl;
+}
+.page-img {
+    max-width: 80%;  /* عشان تتجاوب مع شاشات الجوال */
+    width: 500px;     /* تقدر تكبر أو تصغر الرقم حسب رغبتك */
+    margin: 10px 0;
+    object-fit: contain;
 }
 
 /* الحاوية الأساسية */
 .container {
-    width: 100%;
+    width: 85%;
     max-width: 500px;
     background-color: #ababb0;
     padding: 25px;
     border-radius: 12px;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+    box-shadow: 0 8px 16px #98989b;
 }
 
-h2 {
-    text-align: center;
-    color: #ff0000;
-    border-bottom: 2px solid #5D5D5D;
-    padding-bottom: 15px;
-    margin-top: 0;
-}
 
 /* الصناديق */
 .box {
@@ -41,12 +43,12 @@ h2 {
 input[type="text"] {
     width: 100%;
     padding: 12px;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
     border-radius: 8px;
     border: 2px solid #5D5D5D;
     background-color: #ababb0;
     color: #000000;
-    font-size: 1.1em;
+    font-size: 1.7em;
     box-sizing: border-box;
     text-align: center;
     transition: border-color 0.3s;
@@ -61,10 +63,10 @@ input[type="text"]:focus {
 button {
     width: 100%;
     background-color: #ffc300;
-    color: #000000;
+    color: #353535;
     border: none;
-    padding: 15px;
-    font-size: 1.2em;
+    padding: 5px;
+    font-size: 2em;
     font-weight: bold;
     border-radius: 8px;
     cursor: pointer;
@@ -85,42 +87,42 @@ button:hover {
 
 /* النصوص المميزة */
 .highlight {
-    font-size: 1.5em;
+    font-size: 2em;
     font-weight: bold;
     color: #000;
-    margin-top: 10px;
+    margin-top: 5p;
     text-align: center;
 }
 
 /* حالة اللاعب */
 .status {
     font-weight: bold;
-    font-size: 1.3em;
-    margin-top: 10px;
+    font-size: 1.8em;
+    margin-top: 5px;
     text-align: center;
     padding: 10px;
     border-radius: 6px;
     background-color: #c9c9cf;
 }
 
-.status.in { color: #ffc300; border: 1px solid #ffc; }
-.status.out { color: #ff0000; border: 1px solid #f38ba8; }
+.status.in { color: #51B56C;}
+.status.out { color: #ff0000; }
 
 /* قائمة اللاعبين */
 .player-list {
     list-style-type: none;
     padding: 0;
-    margin: 10px 0 0 0;
+    margin: 5px 0 0 0;
     max-height: 200px;
     overflow-y: auto;
 }
 
 .player-list li {
-    background: #ababb0;
-    margin-bottom: 8px;
-    padding: 10px;
+    background: #c9c9cf;
+    margin-bottom: 5px;
+    padding: 5px;
     border-radius: 6px;
-    font-size: 1.1em;
+    font-size: 1.5em;
     display: flex;
     justify-content: space-between;
 }
